@@ -1,0 +1,20 @@
+{
+  "name": "create-directiveai",
+  "version": "0.1.0",
+  "description": "Scaffold .ai/ DirectiveAI standard into a repo",
+  "type": "module",
+  "bin": {
+    "create-directiveai": "./bin/create.js"
+  },
+  "files": [
+    "bin/",
+    "templates/"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0"
+  }
+}

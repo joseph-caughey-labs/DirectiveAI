@@ -1,0 +1,18 @@
+version: 1
+
+rules:
+  - id: "no-secrets"
+    when:
+      touched_globs:
+        - "**/.env"
+        - "**/.env.*"
+    deny:
+      message: "Do not modify secrets/env via DirectiveAI pipeline."
+
+  - id: "payments-auth-require-tests"
+    when:
+      intent_keywords: ["payment","wallet","auth","login","token"]
+      touched_globs: ["src/**","functions/**"]
+    require:
+      any_verify_checks: ["test"]
+      message: "Payments/auth changes require tests."

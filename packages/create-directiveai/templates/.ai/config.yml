@@ -1,0 +1,37 @@
+version: 1
+
+safety:
+  require_clean: true
+
+verify:
+  commands:
+    - name: lint
+      cmd: "npm run lint"
+    - name: test
+      cmd: "npm test"
+
+ci:
+  enabled: true
+  provider: github
+  base_branch: main
+  node_version: "20"
+  install_cmd: "npm ci"
+
+github:
+  enabled: true
+  base_branch: main
+  draft: true
+
+runner:
+  enabled: true
+  profiles:
+    node:
+      image: "node:20-bookworm"
+      install: ["npm ci"]
+  auto_select:
+    enabled: true
+    priority: ["node"]
+    signals:
+      node:
+        any_files_exist: ["package.json"]
+        any_globs_changed: ["**/*.js", "**/*.ts", "**/*.vue"]

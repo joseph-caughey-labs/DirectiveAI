@@ -2,6 +2,7 @@
   "name": "directiveai-cli",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "DirectiveAI is a Git-first, editor-agnostic workflow that lets you write structured AI directives inside a repository (in comments or directive files) and compile them into safe, auditable feature branches.",
   "license": "MIT",
   "author": "Joseph Caughey (joey.caughey@gmail.com)",
@@ -33,7 +34,9 @@
   "packageManager": "npm@10",
   "scripts": {
     "build": "npm -w directiveai run build",
-    "test": "npm -w directiveai test",
+    "test": "npm -w directiveai test && node --test __TESTS__",
+    "test:unit": "npm -w directiveai test",
+    "test:integration": "node --test __TESTS__",
     "lint": "npm -w directiveai run lint",
     "dev": "npm -w directiveai run dev"
   }

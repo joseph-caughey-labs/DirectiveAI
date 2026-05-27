@@ -4,6 +4,12 @@ All notable changes to DirectiveAI are documented here. The format follows [Keep
 
 ## [Unreleased]
 
+### Added
+- **End-to-end integration test suite** at `__TESTS__/`. 37 tests across 6 files spawn the CLI in temp git repos and assert on exit codes + generated artifacts. Covers every command users can run without external dependencies (Docker / GitHub remote). Runs in ~6 s. Combined with the 44 unit tests in `packages/directiveai/test/`, the project now has **81 automated tests**.
+  - `npm test` runs unit + integration; `npm run test:unit` / `npm run test:integration` for either alone.
+  - A regression test pins the v0.1.2 quickstart fix (clean-tree check vs. accept-renames), so it can't silently come back.
+  - Catches the publish failure mode that produced the broken `directiveai@0.1.3` on npm: workflow tests would have failed if the wrong package were packed.
+
 ## [0.1.3] — 2026-05-27
 
 ### Added

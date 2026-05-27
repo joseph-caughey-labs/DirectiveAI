@@ -4,7 +4,10 @@ All notable changes to DirectiveAI are documented here. The format follows [Keep
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-05-27
+
 ### Fixed
+- **`run` no longer rejects the documented happy path.** With `safety.require_clean: true` (the default), `run` previously failed immediately after `accept` because the pending→ready file renames left the tree dirty. `ensureClean` now exempts DirectiveAI's own bookkeeping paths (`.ai/directives/` and `.ai/out/`) — uncommitted user source still blocks. Also switches to `git status --porcelain --untracked-files=all` so a brand-new `.ai/` directory is enumerated by file rather than collapsed to the parent dir (the case that made the naïve prefix filter wrong).
 - **`getTouchedFilesSinceBase` honored its `branch` argument.** The helper accepted a `branch` parameter but always diffed against `"HEAD"`, so `runner-ship FEAT-001 --base main` (or any caller) would compute the diff against whatever was checked out instead of the requested branch — producing a wrong (often empty) file list and steering profile auto-select toward the default. Now diffs `mergeBase(base, branch)..branch`.
 - **`addArtifact` no longer drops artifacts with the same `kind`.** The previous dedup keyed on `path` *or* `kind`, so a second artifact sharing only its kind (different path, different content) was silently discarded from the index. Dedup is now keyed on `path` alone; same-path re-adds replace the entry (last write wins for `label` / `kind`).
 - **`ingest` is now idempotent.** Previous runs would re-create directive files for every `@ai:` marker on every invocation, producing duplicates with new random IDs. `ingest` now indexes existing `source: { file, line }` across `pending/`, `ready/`, and `done/` and skips markers already represented there. The skip count is shown in the summary line.

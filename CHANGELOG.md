@@ -4,6 +4,8 @@ All notable changes to DirectiveAI are documented here. The format follows [Keep
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-05-27
+
 ### Added
 - **Scope-lock enforcement.** Directives may declare `scope.allow` (whitelist) and/or `scope.deny` (denylist) globs. `run` checks the merge-base diff against the union of all scopes for the batch and aborts with a `scope.violations.json` artifact if a touched file is out of bounds. `--force` bypasses but still records the violation. Files under `.ai/**` are exempt as system paths.
 - **ESLint config** at `packages/directiveai/eslint.config.js` (flat config, `recommended`). `npm run lint` now runs `eslint src bin`.

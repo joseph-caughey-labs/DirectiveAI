@@ -24,7 +24,7 @@ const program = new Command();
 program
   .name("directiveai")
   .description("DirectiveAI — compile repo directives into safe Git branches")
-  .version("0.1.0");
+  .version("0.1.1");
 
 program
   .command("init")

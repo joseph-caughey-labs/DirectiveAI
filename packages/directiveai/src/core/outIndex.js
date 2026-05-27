@@ -12,8 +12,9 @@ export async function loadOutIndex(outDir, branch) {
 
 export async function addArtifact(outDir, branch, artifact) {
   const idx = await loadOutIndex(outDir, branch);
-  const exists = idx.artifacts.some(a => a.path === artifact.path || (a.kind && artifact.kind && a.kind === artifact.kind));
-  if (!exists) idx.artifacts.push(artifact);
+  const i = idx.artifacts.findIndex(a => a.path === artifact.path);
+  if (i === -1) idx.artifacts.push(artifact);
+  else idx.artifacts[i] = artifact;
   idx.generated_at = nowIso();
 
   await fs.writeFile(path.join(outDir, "index.json"), JSON.stringify(idx, null, 2), "utf8");

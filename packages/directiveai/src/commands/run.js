@@ -10,12 +10,13 @@ import { loadPolicy, evaluatePolicy, writePolicyViolations } from "../core/polic
 import { ensureClean, createBranch, mergeBase, diffNameOnly } from "../core/git.js";
 import { addArtifact } from "../core/outIndex.js";
 import { filterDirectiveFiles, readDirectiveFile } from "../core/directiveFiles.js";
+import { extractScope, checkScope, writeScopeViolations } from "../core/scope.js";
 
 // NOTE: This repo ships a SAFE skeleton for "compile".
 // Real code-generation/model calls are intentionally left as extension points.
 // The compile step here demonstrates:
 // - branch creation
-// - scope-lock enforcement stub
+// - scope-lock enforcement (directive `scope.allow`/`scope.deny` vs. touched files)
 // - policy evaluation based on touched files
 // - artifacts written to .ai/out/<branch>/
 
@@ -58,10 +59,12 @@ export async function cmdRun({ ready = false, id = null, branch = null, baseBran
   const doneDir = path.join(aiRoot(root), "directives", "done");
   await fs.mkdir(doneDir, { recursive: true });
   const moves = [];
+  const docs = [];
 
   for (const f of pick) {
     const fp = path.join(readyDir, f);
     const doc = await readDirectiveFile(fp);
+    docs.push(doc);
 
     // Extension point: implement compiler adapters here.
     // For now, we write a marker file per directive.
@@ -70,7 +73,7 @@ export async function cmdRun({ ready = false, id = null, branch = null, baseBran
 
     runMeta.directives.push({ id: doc.id, title: doc.title, source: doc.source });
 
-    // Defer moving directives until policy passes to avoid losing them on failure.
+    // Defer moving directives until checks pass to avoid losing them on failure.
     moves.push({ from: fp, to: path.join(doneDir, f) });
   }
 
@@ -82,9 +85,40 @@ export async function cmdRun({ ready = false, id = null, branch = null, baseBran
     throw new Error(`git commit failed (exit ${commitResult.exitCode}). Check hooks and staged files.`);
   }
 
-  // Policy evaluation based on touched files
+  // Diff vs. base for scope + policy evaluation
   const mb = await mergeBase(root, base, "HEAD");
   const touched = await diffNameOnly(root, mb, "HEAD");
+
+  // Scope-lock: union of directive scopes constrains which user files may change.
+  const scope = extractScope(docs);
+  const scopeRes = checkScope(touched, scope);
+  runMeta.scope = { allow: scope.allow, deny: scope.deny, sources: scope.sources };
+  if (!scopeRes.ok && !force) {
+    runMeta.status = "scope_fail";
+    await writeScopeViolations(outDir, scopeRes, {
+      branch,
+      base,
+      merge_base: mb,
+      touched_files: touched
+    });
+    await fs.writeFile(path.join(outDir, "run.meta.json"), safeJson(runMeta), "utf8");
+    await addArtifact(outDir, branch, { kind: "run_meta", path: `.ai/out/${branch}/run.meta.json`, label: "Run metadata" });
+    await addArtifact(outDir, branch, { kind: "scope_violations", path: `.ai/out/${branch}/scope.violations.json`, label: "Scope violations" });
+
+    const offending = scopeRes.violations.map(v => `  - ${v.file} (${v.reason})`).join("\n");
+    throw new Error(`Scope-lock violations:\n${offending}\nSee .ai/out/${branch}/scope.violations.json (or pass --force to bypass).`);
+  }
+  if (!scopeRes.ok && force) {
+    // Record the bypass for the audit trail even when --force lets it through.
+    await writeScopeViolations(outDir, scopeRes, {
+      branch,
+      base,
+      merge_base: mb,
+      touched_files: touched,
+      forced: true
+    });
+    await addArtifact(outDir, branch, { kind: "scope_violations", path: `.ai/out/${branch}/scope.violations.json`, label: "Scope violations (forced)" });
+  }
 
   const policyRes = evaluatePolicy({ policy, directive: { intent: runMeta.directives.map(d => d.title).join(" ") }, touchedFiles: touched, verifyMeta: null, flags: { force } });
 

@@ -56,13 +56,13 @@ program
   .option("--ready", "Run all directives in ready")
   .option("--id <id>", "Run one directive id")
   .option("--branch <branch>", "Target branch name")
-  .option("--base <branch>", "Base branch", "main")
+  .option("--base <branch>", "Base branch")
   .option("--force", "Bypass some safety limits")
   .action((opts) => cmdRun({
     ready: !!opts.ready,
     id: opts.id || null,
     branch: opts.branch || null,
-    baseBranch: opts.base,
+    baseBranch: opts.base || null,
     force: !!opts.force
   }));
 

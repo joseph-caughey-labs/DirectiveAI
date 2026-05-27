@@ -1,6 +1,6 @@
 {
   "name": "directiveai",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Compile repo directives into safe Git branches (scope lock, policy gates, verify, PR artifacts).",
   "type": "module",
   "bin": {

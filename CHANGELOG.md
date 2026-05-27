@@ -4,6 +4,11 @@ All notable changes to DirectiveAI are documented here. The format follows [Keep
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-05-27
+
+### Added
+- **Package README + LICENSE shipped to npm.** Workspaces only pack files in their own directory, so the previous tarball had no README and no LICENSE — the npmjs.com page would have been blank. Adds `packages/directiveai/README.md` (a CLI-focused overview, distinct from the monorepo root README) and `packages/directiveai/LICENSE` (copy of the repo's MIT license).
+
 ## [0.1.2] — 2026-05-27
 
 ### Fixed

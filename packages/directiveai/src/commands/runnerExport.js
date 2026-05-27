@@ -25,13 +25,53 @@ export async function cmdRunnerExport({ force = false }) {
 }
 
 function defaultDockerfile() {
-  return `FROM node:20-bookworm\n\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n  git ca-certificates bash \\\n  && rm -rf /var/lib/apt/lists/*\n\nWORKDIR /work\n`;
+  return [
+    "FROM node:20-bookworm",
+    "",
+    "RUN apt-get update && apt-get install -y --no-install-recommends \\",
+    "  git ca-certificates bash \\",
+    "  && rm -rf /var/lib/apt/lists/*",
+    "",
+    "WORKDIR /work",
+    ""
+  ].join("\n");
 }
 
 function defaultDockerignore() {
-  return `node_modules\n.git\n.ai/out\ndist\nbuild\ncoverage\n*.log\n`;
+  return [
+    "node_modules",
+    ".git",
+    ".ai/out",
+    "dist",
+    "build",
+    "coverage",
+    "*.log",
+    ""
+  ].join("\n");
 }
 
 function defaultRunnerScript() {
-  return `#!/usr/bin/env bash\nset -euo pipefail\n\nIMAGE=\"\${AI_RUNNER_IMAGE:-ai-runner:latest}\"\nWORKDIR=\"\${AI_RUNNER_WORKDIR:-/work}\"\nMOUNT_MODE=\"\${AI_RUNNER_MOUNT_MODE:-rw}\"\n\nENV_ARGS=()\nfor V in OPENAI_API_KEY ANTHROPIC_API_KEY; do\n  if [ -n \"\${!V:-}\" ]; then\n    ENV_ARGS+=(\"-e\" \"$V=\${!V}\")\n  fi\ndone\n\ndocker run --rm -it \\\n  -v \"$(pwd):\${WORKDIR}:\${MOUNT_MODE}\" \\\n  -w \"\${WORKDIR}\" \\\n  \"\${ENV_ARGS[@]}\" \\\n  \"$IMAGE\" \\\n  bash -lc \"$*\"\n`;
+  return [
+    "#!/usr/bin/env bash",
+    "set -euo pipefail",
+    "",
+    'IMAGE="${AI_RUNNER_IMAGE:-ai-runner:latest}"',
+    'WORKDIR="${AI_RUNNER_WORKDIR:-/work}"',
+    'MOUNT_MODE="${AI_RUNNER_MOUNT_MODE:-rw}"',
+    "",
+    "ENV_ARGS=()",
+    "for V in OPENAI_API_KEY ANTHROPIC_API_KEY; do",
+    '  if [ -n "${!V:-}" ]; then',
+    '    ENV_ARGS+=("-e" "$V=${!V}")',
+    "  fi",
+    "done",
+    "",
+    "docker run --rm -it \\",
+    '  -v "$(pwd):${WORKDIR}:${MOUNT_MODE}" \\',
+    '  -w "${WORKDIR}" \\',
+    '  "${ENV_ARGS[@]}" \\',
+    '  "$IMAGE" \\',
+    '  bash -lc "$*"',
+    ""
+  ].join("\n");
 }

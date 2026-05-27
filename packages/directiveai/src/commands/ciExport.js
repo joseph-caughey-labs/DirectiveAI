@@ -3,7 +3,6 @@ import path from "node:path";
 import chalk from "chalk";
 
 import { loadConfig } from "../core/config.js";
-import { aiRoot } from "../core/paths.js";
 
 export async function cmdCiExport() {
   const root = process.cwd();

@@ -4,6 +4,12 @@ All notable changes to DirectiveAI are documented here. The format follows [Keep
 
 ## [Unreleased]
 
+### Fixed
+- **`ingest` is now idempotent.** Previous runs would re-create directive files for every `@ai:` marker on every invocation, producing duplicates with new random IDs. `ingest` now indexes existing `source: { file, line }` across `pending/`, `ready/`, and `done/` and skips markers already represented there. The skip count is shown in the summary line.
+
+### Added
+- **Inline-marker metadata parsing.** The `[intent=…]` / `[prio=…]` / `[priority=…]` bracket convention previously documented in the examples is now actually parsed by `ingest` — the brackets are stripped from the title and applied to the directive's fields. Keys are case-insensitive. A leading `TASK:` / `TODO:` / `NOTE:` / `FIXME:` prefix is also stripped.
+
 ## [0.1.1] — 2026-05-27
 
 ### Added

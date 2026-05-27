@@ -4,7 +4,7 @@
 Security updates are provided for the latest **minor** release line (e.g. `1.x`). Critical fixes may be backported at the maintainer’s discretion.
 
 ## Reporting a vulnerability
-Please report security issues **privately**.
+Please report security issues **privately** to `joey.caughey@gmail.com`, or via GitHub's [private vulnerability reporting](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability) on the repository. **Do not open a public issue for security reports.**
 
 Include:
 - clear description
@@ -12,6 +12,8 @@ Include:
 - affected versions
 - impact assessment
 - any suggested mitigation
+
+You should receive an acknowledgement within 7 days. If you don't, please follow up — the message may have been missed.
 
 ## What counts as a security issue?
 Examples:

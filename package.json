@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "DirectiveAI is a Git-first, editor-agnostic workflow that lets you write structured AI directives inside a repository (in comments or directive files) and compile them into safe, auditable feature branches.",
+  "description": "Monorepo for DirectiveAI — a Git-first, editor-agnostic workflow for writing structured AI directives in a repo and compiling them into safe, auditable feature branches.",
   "license": "MIT",
   "author": "Joseph Caughey (joey.caughey@gmail.com)",
   "homepage": "https://github.com/joseph-caughey-labs/DirectiveAI#readme",

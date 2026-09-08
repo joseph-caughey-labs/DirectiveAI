@@ -4,6 +4,12 @@ All notable changes to DirectiveAI are documented here. The format follows [Keep
 
 ## [Unreleased]
 
+## [0.1.4] — 2026-09-07
+
+### Fixed
+- **`directiveai@0.1.3` shipped without a CLI.** The publish ran from the monorepo root, so npm packed the root package: `workspaces` present, no `bin` field, and every workspace nested under `packages/` inside the tarball. There was no `bin/ai.js` at the tarball root, so `npm i -g directiveai` installed a package with no executable and any invocation failed with `could not determine executable to run`. The package was unusable from 2026-05-27 until this release. Releases now run `npm publish -w directiveai`, which packs the workspace rather than the root, and the root package is renamed `directiveai-cli` and marked `private: true` so it cannot be published by accident again.
+- **Package metadata pointed at a placeholder repository.** `repository.url` was `git+https://github.com/your-org/directiveai.git`. It now points at the real repository, with `directory` set for the monorepo subpath, plus `homepage` and `bugs`.
+
 ### Added
 - **End-to-end integration test suite** at `__TESTS__/`. 37 tests across 6 files spawn the CLI in temp git repos and assert on exit codes + generated artifacts. Covers every command users can run without external dependencies (Docker / GitHub remote). Runs in ~6 s. Combined with the 44 unit tests in `packages/directiveai/test/`, the project now has **81 automated tests**.
   - `npm test` runs unit + integration; `npm run test:unit` / `npm run test:integration` for either alone.

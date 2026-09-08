@@ -8,6 +8,7 @@ All notable changes to DirectiveAI are documented here. The format follows [Keep
 
 ### Fixed
 - **`directiveai@0.1.3` shipped without a CLI.** The publish ran from the monorepo root, so npm packed the root package: `workspaces` present, no `bin` field, and every workspace nested under `packages/` inside the tarball. There was no `bin/ai.js` at the tarball root, so `npm i -g directiveai` installed a package with no executable and any invocation failed with `could not determine executable to run`. The package was unusable from 2026-05-27 until this release. Releases now run `npm publish -w directiveai`, which packs the workspace rather than the root, and the root package is renamed `directiveai-cli` and marked `private: true` so it cannot be published by accident again.
+- **Seven Dependabot advisories, two of them reaching users.** `js-yaml` and `minimatch` are runtime dependencies, so their advisories shipped to anyone installing the package; the `brace-expansion@1.x` chain was dev-only via eslint. All resolve inside the existing semver ranges, so the lockfile moves and the declared dependencies do not: `js-yaml` 4.1.1 to 4.3.2, `brace-expansion` 2.1.1 to 2.1.4 and 1.1.15 to 1.1.18. `npm audit` is clean.
 - **Package metadata pointed at a placeholder repository.** `repository.url` was `git+https://github.com/your-org/directiveai.git`. It now points at the real repository, with `directory` set for the monorepo subpath, plus `homepage` and `bugs`.
 
 ### Added

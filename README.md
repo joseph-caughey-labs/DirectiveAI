@@ -60,6 +60,8 @@ npx directiveai pr FEAT-001
 npx directiveai out FEAT-001
 ```
 
+After install, the shorter `directiveai` and `dai` binaries are on PATH — use either form.
+
 ## Packages
 
 - `packages/directiveai` — the CLI (`directiveai`, `dai`)

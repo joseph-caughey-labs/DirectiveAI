@@ -6,6 +6,8 @@
 npm i -D directiveai
 ```
 
+> The bin name is `directiveai` (and `dai`). The npm package name is `directiveai`. After install, you can run either `directiveai <cmd>` or `npx directiveai <cmd>` — the examples below use `npx` so they work even before global install.
+
 ## Initialize
 
 ```bash

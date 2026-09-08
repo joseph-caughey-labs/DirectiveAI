@@ -1,6 +1,6 @@
 {
   "name": "directiveai",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Compile repo directives into safe Git branches (scope lock, policy gates, verify, PR artifacts).",
   "type": "module",
   "bin": {
@@ -12,6 +12,9 @@
     "src/"
   ],
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18"
   },
@@ -45,6 +48,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-org/directiveai.git"
+    "url": "git+https://github.com/joseph-caughey-labs/DirectiveAI.git",
+    "directory": "packages/directiveai"
+  },
+  "homepage": "https://github.com/joseph-caughey-labs/DirectiveAI#readme",
+  "bugs": {
+    "url": "https://github.com/joseph-caughey-labs/DirectiveAI/issues"
   }
 }
